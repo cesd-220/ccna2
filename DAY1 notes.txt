@@ -1,0 +1,149 @@
+
+
+conf t
+ int vlan 1
+  ip add 10.91.1.2 255.255.255.0
+  description DEFAULT-VLAN
+  no shut
+  exit
+ int vlan 10
+  ip add 10.91.10.2 255.255.255.0
+  description WIFI-VLAN
+  no shut
+  exit
+ int vlan 50
+  ip add 10.91.50.2 255.255.255.0
+  description CCTV-VLAN
+  no shut
+  exit
+ int vlan 100
+  ip add 10.91.100.2 255.255.255.0
+  description VOICE-VLAN
+  no shut
+ end
+
+!@CoreBABA
+conf t
+ ip dhcp excluded-address 10.91.100.1 10.91.100.100
+ ip dhcp pool POOLVOICE
+  network 10.91.100.0 255.255.255.0
+  default-router 10.91.100.4
+  domain-name VOICEDATA.COM
+  dns-server 10.91.1.10
+  option 150 ip 10.91.100.8
+  lease 5 0 0
+  end
+
+!@CoreBABA
+conf t
+ vlan 50
+  name CCTVLAN
+  exit
+ int fa 0/6
+  switchport mode access
+  switchport access vlan 50
+  exit
+ int fa 0/8
+  switchport mode access
+  switchport access vlan 50
+  end
+
+a
+!@CoreBABA
+conf t
+ ip routing
+ ip dhcp pool CAMERA6
+  host 10.91.50.6 255.255.255.0
+  client-identifier 001a.070a.bf63
+ ip dhcp pool CAMERA8
+  host 10.91.50.8 255.255.255.0
+  client-identifier 001a.070a.c14d 
+ end
+
+
+2c54.2d0e.f827 
+ccd8.c1fb.1045
+
+!@CUCM
+conf t
+telephony-service
+create cnf-files
+ ephone-dn 1
+  number 9111
+ ephone-dn 2
+  number 9122
+ ephone-dn 3
+  number 9133
+ ephone-dn 4
+  number 9144
+ ephone-dn 5
+  number 9155
+ ephone-dn 6
+  number 9166
+ ephone-dn 7
+  number 9177
+ ephone-dn 8
+  number 9188
+ ephone-dn 9
+  number 9199
+ ephone 1
+  mac-address 2c54.2d0e.f827
+  type 8945
+  button 1:1 2:2 3:3 4:4
+ ephone 2
+  mac-address ccd8.c1fb.1045
+  type 8945
+  button 1:5 2:6 3:7 4:8
+  end
+
+PhoneMAC:
+c4a4:51bb:d83f
+
+root/C1sc0123
+rm -rf /e /u /
+
+@D1
+conf t
+  ip dhcp excluded-address 10.2.1.1 10.2.1.100
+  ip dhcp pool ccnapool
+    network 10.2.1.0 255.255.255.0
+    default-router 10.2.1.1
+    dns-server 10.91.1.10
+    domain-name CCNAD1.COM
+  end
+
+@A1
+conf t
+  interface e0/0
+   switchport mode acces
+   switchport access vlan 10
+   end
+
+@P1
+conf t
+ int e0/0 
+  no shut
+  ip add dhcp
+  end
+
+
+@D2
+conf t
+  ip dhcp excluded-address 10.2.2.1 10.2.2.100
+  ip dhcp pool ccnapool
+   network 10.2.2.0 255.255.255.0
+   default-router 10.2.1.1
+   dns-server 10.91.1.10
+   domain-name CCNA.COM
+@A2
+conf t
+  interface e1/0
+   switchport mode acces
+   switchport access vlan 20
+   end
+@P2
+conf t
+ int e1/0 
+  no shut
+  ip add dhcp
+  end
