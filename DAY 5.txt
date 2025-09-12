@@ -1,0 +1,105 @@
+EX.2: SUBNET cafe:cafe:cafe:mm::/64 to 450 offices:
+C: 450 is 9bits
+A: /64+ /9 = /73 8i, 3rd field 
+iChamba:
+
+
+1st: :0000: /73
+2nd: :0080:
+3nd: :0100:
+4nd: :0180:
+5nd: :0200:
+6th: :0280:
+
+config t
+int lo 1
+ ipv6 add cafe:cafe:cafe:1212:0000::1212/73
+int lo 2
+ ipv6 add cafe:cafe:cafe:1212:0080::1212/73
+int lo 3
+ ipv6 add cafe:cafe:cafe:1212:0100::1212/73
+int lo 4
+ ipv6 add cafe:cafe:cafe:1212:0180::1212/73
+int lo 5
+ ipv6 add cafe:cafe:cafe:1212:0200::1212/73
+int lo 6
+ ipv6 add cafe:cafe:cafe:1212:0280::1212/73
+int lo 7
+ ipv6 add cafe:cafe:cafe:1212:0300::1212/73
+int lo 8
+ ipv6 add cafe:cafe:cafe:1212:0380::1212/73
+
+ do sh ipv6 int brief
+3 traffics: 
+unicast:
+broadcast: worst kind of traffic
+multicast MacAddress 01:00:5e
+
+4 Super Heroes
+1 CUPID 802.1q
+STED switchport trunk encap dot1q
+SMT switchport mode trunk
+STAV switchport trunk allow vlan 1-100
+STNV switchport native vlan 1
+
+2. DARNA 802.1d
+SiMP spanning-tree mode pvst
+
+3. WonderWOman 802.1w
+SMRP spanning-tree mode rapid-pvst
+
+4. EtherChannel:
+CGMA channel-group mode active  
+CuPL channel-protocol lacp
+
+5. Verify for switch
+SIT show int trunk
+SVB show vlan brief
+SIIB - show ip int br
+SES - show etherchannel summary
+SST - show spanning-tree vlan 1
+
+
+ACCESS AND TRUNK PORTS
+
+config t
+Int Range fa0/10-12
+ shutdown
+ switchport trunk Encap Dot1Q
+ switchport mode trunk
+ switchport trunk allowed vlan 1-100
+ switchport trunk native vlan 1
+no shut
+ do sh int trunk
+
+
+config t
+hostname CoreTAAS-PLDT
+Track 1 Int gi 0/1 line-protocol
+Int vlan 1
+standby 1 ip 10.91.1.6
+standby 1 preempt
+standby 1 Priority 150
+standby 1 Track 1 decrement 60
+line vty 0 14
+
+config t
+hostname CoreBABA-GLOBE
+Int vlan 1
+standby 1 ip 10.91.1.6
+standby 1 preempt
+standby 1 Priority 100
+end
+
+
+How to pass CCNA 1 month:
+1. Burn the Bridge Method
+
+
+
+
+If no Lab VM has no IP, use ff commands in root cli:
+
+rm -rf /etc/udev/rules.d/70-persistent-net.rules
+cat /etc/udev/rules.d/70-persistent-net.rules
+reboot
